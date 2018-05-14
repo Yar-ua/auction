@@ -14,3 +14,7 @@
 !/tmp/.keep
 
 .byebug_history
+
+# ignore RubyMine
+.idea/*.xml
+.idea/*
