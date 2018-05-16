@@ -42,6 +42,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # gem for testing my application
 gem 'rspec-rails', :group => [:development, :test]
+# gem 'factory_girl_rails'
 
 # authentication with token
 gem 'devise'

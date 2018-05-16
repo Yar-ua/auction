@@ -31,7 +31,7 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  # Config Action Mailer for auth with devise
+  # Config Action Mailer for auth with devise_token_auth
   config.action_mailer.default_url_options = { host: 'localhost' }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
