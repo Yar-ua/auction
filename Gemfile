@@ -47,3 +47,5 @@ gem 'rspec-rails', :group => [:development, :test]
 # authentication with token
 gem 'devise'
 gem 'devise_token_auth'
+
+gem 'rack-cors'
