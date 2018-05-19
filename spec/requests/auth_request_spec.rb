@@ -33,35 +33,33 @@ RSpec.describe "Auth", :type => :request do
 
   describe 'Testing registration: POST /auth' do
     it 'should respond with 200 OK' do
-      post user_registration_path @registration_params
+      registration
       expect(response).to be_success 
     end
 
     it 'should increase user count by 1' do
       expect{
-        post user_registration_path @registration_params
+        registration
       }.to change(User, :count).by(1)
     end
   end
 
   describe 'Testing confirm registration: GET /auth/confirmation' do
     before do
-      post user_registration_path @registration_params
-      @user = User.last
+      registration
     end
 
     it 'should respond with 301 REDIRECTION' do
-      get user_confirmation_path(:config => 'default', :confirmation_token => @user.confirmation_token, :redirect_url => '/')
+      register_confirmation
       expect(response).to be_redirect
     end
   end
 
   describe 'Testing login: POST /auth/sign_in' do
     before do
-      post user_registration_path @registration_params
-      user = User.last
-      get user_confirmation_path(:config => 'default', :confirmation_token => user.confirmation_token, :redirect_url => '/')
-      post user_session_path @sign_in_params
+      registration
+      register_confirmation
+      sign_in
       @auth_params = get_auth_params_from_login_response_headers(response)
     end
 
@@ -97,10 +95,13 @@ RSpec.describe "Auth", :type => :request do
 
   describe 'Testing reset password when user not authorised' do
     before do
-      post user_registration_path @registration_params
-      user = User.last
-      get user_confirmation_path(:config => 'default', :confirmation_token => user.confirmation_token, :redirect_url => '/')
-      post user_password_path(email: @sign_in_params[:email], redirect_url: 'auth/password/edit')
+      registration
+      register_confirmation
+      sign_in
+      @auth_params = get_auth_params_from_login_response_headers(response)
+      post user_password_path(email: @registration_params[:email], 
+          redirect_url: 'auth/password/edit', headers: @auth_params)
+      @auth_params = get_auth_params_from_login_response_headers(response)
     end
 
     it 'password reset response should be 200 ok' do
@@ -109,11 +110,12 @@ RSpec.describe "Auth", :type => :request do
 
     describe 'confirmation reset passord' do
       it 'should be successfully' do
+        # reset password confirmation
         user = User.last
-        put user_password_path(:reset_password_token => user.reset_password_token, 
-          password: 'password', password_confirmation: 'password')
-        
-        expect(response.status).to eq(200)
+        get edit_user_password_path(:config => 'default', :reset_password_token => user.reset_password_token, 
+            redirect_url: 'auth/password/edit')
+        expect(response.status).to eq(302)
+        #get 'http://localhost/auth/password/edit?config=default&redirect_url=auth%2Fpassword%2Fedit&reset_password_token="#{user.reset_password_token}"'
       end
     end
   end
@@ -135,6 +137,20 @@ RSpec.describe "Auth", :type => :request do
       'token_type' => token_type
     }
     auth_params
+  end
+
+  def sign_in
+    post user_session_path @sign_in_params
+  end
+
+  def registration
+    post user_registration_path @registration_params
+  end
+
+  def register_confirmation
+    user = User.last
+    get user_confirmation_path(:config => 'default', 
+      :confirmation_token => user.confirmation_token, :redirect_url => '/')
   end
 
 end
