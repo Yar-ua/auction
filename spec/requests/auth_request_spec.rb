@@ -93,7 +93,7 @@ RSpec.describe "Auth", :type => :request do
     end
   end
 
-  describe 'Testing reset password when user not authorised' do
+  describe 'Testing reset password' do
     before do
       registration
       register_confirmation
