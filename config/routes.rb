@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   # Lots routing
   resources :lots
   # route for show my lots
-  get '/mylots' => 'lots#my'
+  get '/mylots' => 'lots#mylots'
   
   
 end

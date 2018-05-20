@@ -27,4 +27,16 @@ RSpec.describe Lot, type: :model do
     it { should respond_to(:lot_end_time)}
     it { should respond_to(:user_id)}
   end
+
+  it 'Lot is valid with valid attributes' do
+    # lot_attrs = attributes_for(:lot)
+    # lot = Lot.new lot_attrs
+    expect(@lot).to be_valid
+  end
+
+  it 'Lot is valid with valid attributes' do
+    lot_attrs = attributes_for(:lot).except(:user_id)
+    new_lot = Lot.new lot_attrs
+    expect(new_lot).to be_invalid
+  end
 end
