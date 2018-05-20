@@ -4,6 +4,9 @@ class User < ApplicationRecord
           :confirmable #, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
+  # User can have many Lots
+  has_many :lots
+
   # Set validations
   validates :phone, :email, uniqueness: {message: 'Current phone or email already exists, try another'}
   validates :email, :phone, :first_name, :last_name, :birth_day, presence: {messaage: 'Value must be present'}
