@@ -54,3 +54,5 @@ gem 'rack-cors'
 
 # datetime validation gem
 gem 'validates_timeliness'
+# gem for using in FactoryBot
+gem 'faker'

@@ -1,10 +1,10 @@
 FactoryBot.define do
   factory :user do
-    email 'asdf@asdf.com'
-    password 'qwertyuiop'
-    phone '0671112233'
-    first_name 'Hilly'
-    last_name 'Billy'
-    birth_day '1980'
+    email Faker::Internet.unique.email
+    password Faker::Internet.unique.password
+    phone Faker::PhoneNumber.unique.cell_phone
+    first_name Faker::Name.first_name
+    last_name Faker::Name.last_name
+    birth_day Faker::Date.birthday min_age = 22
   end
 end

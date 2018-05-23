@@ -1,12 +1,11 @@
 FactoryBot.define do
-  factory :lot do
-    user
+  factory :lot, class: Lot do
     association :user_id, :factory => :user
-    title 'Chili Pepper'
-    description 'Very spicy'
-    current_price 10
-    estimated_price 75
-    lot_start_time DateTime.new(2018,6,1,6,30,0)
-    lot_end_time DateTime.new(2018,6,2,8,45,0)
+    title Faker::Name.title
+    description Faker::Name.title
+    current_price Faker::Commerce.price
+    estimated_price (Faker::Commerce.price * 5)
+    lot_start_time (DateTime.now + 4.hours)
+    lot_end_time (DateTime.now + 12.hours)
   end
 end

@@ -8,7 +8,13 @@ class Lot < ApplicationRecord
     :lot_end_time, presence: {message: 'Value must be present'}
   validates :current_price, :estimated_price, numericality: { only_integer: false, message: 'Value must be digit' }
   validates_datetime :lot_start_time, :lot_end_time
-  # TODO
-  # need to add validation of price (>0) and datetime (more than current time, 
-  # endtime > starttime)
+  validate :valid_lot_times
+  
+  # validating time columns in the lot
+  def valid_lot_times
+    if (lot_start_time > DateTime.now) and (lot_end_time > lot_start_time)
+      return true
+    end
+  end
+  
 end
