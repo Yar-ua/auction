@@ -51,3 +51,6 @@ gem 'devise'
 gem 'devise_token_auth'
 
 gem 'rack-cors'
+
+# datetime validation gem
+gem 'validates_timeliness'

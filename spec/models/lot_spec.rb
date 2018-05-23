@@ -4,19 +4,17 @@ RSpec.describe Lot, type: :model do
 
   let(:user) {FactoryBot.create(:user)}
 
-  before do
-    @lot = Lot.new(
-      title: 'Chili Pepper',
-      description: 'Very spicy',
-      current_price: 10,
-      estimated_price: 75,
-      lot_start_time: DateTime.new(2018,6,1,6,30,0),
-      lot_end_time: DateTime.new(2018,6,2,8,45,0),
-      user_id: user.id
-    )
+  let(:lot) {FactoryBot.create(:lot, :user_id => user.id)}
+
+  it 'user after Factory valid with valid attributes' do
+    expect(user).to be_valid
   end
 
-  subject { @lot }
+  it 'lot after Factory valid with valid attributes' do
+    expect(lot).to be_valid
+  end
+
+  subject { lot }
 
   describe 'lot must have all important attributes' do
     it { should respond_to(:title)}
@@ -29,9 +27,7 @@ RSpec.describe Lot, type: :model do
   end
 
   it 'Lot is valid with valid attributes' do
-    # lot_attrs = attributes_for(:lot)
-    # lot = Lot.new lot_attrs
-    expect(@lot).to be_valid
+    expect(lot).to be_valid
   end
 
   it 'Lot is valid with valid attributes' do
