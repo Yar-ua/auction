@@ -28,12 +28,15 @@ class LotsController < ApplicationController
   end
 
   def update
-    if (@lot.user_id != current_user.id) and (@lot.pending? == false)
-      send_response(402, 'Forbidden - You are not lot creator, or lot status forbid update (not pending)')
-    elsif @lot.update(lot_params)
-      send_response(200, @lot)
+    if (@lot.user_id == current_user.id) and (@lot.pending? == true)
+      if @lot.valid?
+        @lot.update(lot_params)
+        send_response(200, @lot)
+      else
+        send_response(403, @lot.errors)
+      end
     else
-      send_response(422, @lot.errors)
+      send_response(422, 'Forbidden - You are not lot creator, or lot status forbid update (not pending)')
     end
   end
 
@@ -41,6 +44,8 @@ class LotsController < ApplicationController
     if (@lot.user_id == current_user.id) and (@lot.pending?)
       @lot.destroy
       send_response(200, 'Lot deleted successfully')
+    else
+      send_response(422, 'Deleting impossible, you are not owner or lot status is not pending')
     end
   end
 
@@ -49,7 +54,7 @@ class LotsController < ApplicationController
 
   # get lots params
   def lot_params
-    params.require(:lot).permit(:title, :description, :current_price, :estimated_price, 
+    params.permit(:title, :description, :current_price, :estimated_price, 
       :lot_start_time, :lot_end_time)
   end
 
@@ -65,10 +70,7 @@ class LotsController < ApplicationController
 
   # send response JSON
   def send_response(status, data)
-    render :json => {
-      :status => status,
-      :message => data
-    }.to_json
+    render status: status, json: data.to_json
   end
 
 end

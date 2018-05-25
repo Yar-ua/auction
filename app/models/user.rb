@@ -5,7 +5,7 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   # User can have many Lots
-  has_many :lots
+  has_many :lots, dependent: :destroy
 
   # Set validations
   validates :phone, :email, uniqueness: {message: 'Current phone or email already exists, try another'}

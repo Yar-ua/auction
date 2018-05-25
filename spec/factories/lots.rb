@@ -1,6 +1,6 @@
 FactoryBot.define do
-  factory :lot, class: Lot do
-    association :user_id, :factory => :user
+  factory :lot do
+    association :user, :factory => :user
     title Faker::Name.title
     description Faker::Name.title
     current_price Faker::Commerce.price
