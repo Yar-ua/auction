@@ -11,7 +11,11 @@ class LotsController < ApplicationController
   def mylots
     # TODO
     # Need update ordering by my lots
-    send_response(200, @lots)
+    if @my_lots.empty?
+      send_response(204, "You haven't your lots yet")
+    else
+      send_response(200, @my_lots)
+    end
   end
 
   def create
@@ -65,7 +69,7 @@ class LotsController < ApplicationController
 
   # set lots where user is seller or user created some bids
   def set_my_lots
-    @lots = current_user.lots
+    @my_lots = current_user.lots
   end
 
   # send response JSON

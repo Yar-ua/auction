@@ -53,9 +53,17 @@ RSpec.describe LotsController, type: :controller do
       expect(response.status).to be
     end
 
-    it "can get /mylots page after sign_in" do
-      get :mylots
-      expect(response.status).to eq(200)
+    describe "can get /mylots page after sign_in" do
+      it "and any your lots didn't exists" do
+        get :mylots
+        expect(response.status).to eq(204)
+      end
+
+      it "and some of your lots already exists" do
+        new_lot = FactoryBot.create(:lot, user_id: @current_user.id)
+        get :mylots
+        expect(response.status).to eq(200)
+      end
     end
 
     # Testing, where user tried to create lot
