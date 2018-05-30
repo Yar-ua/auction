@@ -17,22 +17,50 @@ RSpec.describe Lot, type: :model do
   subject { lot }
 
   describe 'lot must have all important attributes' do
-    it { should respond_to(:title)}
-    it { should respond_to(:description)}
-    it { should respond_to(:current_price)}
-    it { should respond_to(:estimated_price)}
-    it { should respond_to(:lot_start_time)}
-    it { should respond_to(:lot_end_time)}
-    it { should respond_to(:user_id)}
+    it { expect(:title).to be}
+    it { expect(:description).to be}
+    it { expect(:current_price).to be}
+    it { expect(:estimated_price).to be}
+    it { expect(:lot_start_time).to be}
+    it { expect(:lot_end_time).to be}
+    it { expect(:user_id).to be}
   end
 
   it 'Lot is valid with valid attributes' do
     expect(lot).to be_valid
   end
 
-  it 'Lot is valid with valid attributes' do
-    lot_attrs = attributes_for(:lot).except(:user_id)
-    new_lot = Lot.new lot_attrs
-    expect(new_lot).to be_invalid
+  describe 'Lots price:' do
+
+    it 'lot current_price cant be less 0' do
+      lot.estimated_price = -5
+      expect(lot).to be_invalid
+    end
+
+    it 'lot estimated_price cant be less 0' do
+      lot.current_price = -0.1
+      expect(lot).to be_invalid
+    end
   end
+
+  describe 'Lot is' do
+    it 'invalid if lot_start_time is after lot_end_time' do
+      lot.lot_start_time = DateTime.now
+      lot.lot_end_time = DateTime.now - 1.second
+      expect(lot).to be_invalid
+    end
+
+    it 'valid if lot_start_time is before lot_end_time' do
+      lot.lot_start_time = DateTime.now
+      lot.lot_end_time = DateTime.now + 1.second
+      expect(lot).to be_valid
+    end
+
+    it 'Lot is invalid without :user_id' do
+      lot_attrs = attributes_for(:lot).except(:user_id)
+      new_lot = Lot.new lot_attrs
+      expect(new_lot).to be_invalid
+    end
+  end
+
 end

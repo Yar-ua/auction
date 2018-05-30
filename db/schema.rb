@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20180520150134) do
   create_table "lots", force: :cascade do |t|
     t.bigint "user_id"
     t.string "title"
-    t.string "description", default: "null"
+    t.string "description", default: ""
     t.float "current_price", null: false
     t.float "estimated_price", null: false
     t.datetime "lot_start_time", null: false

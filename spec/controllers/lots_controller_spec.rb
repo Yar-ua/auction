@@ -9,9 +9,14 @@ RSpec.describe LotsController, type: :controller do
       @new_lot = FactoryBot.attributes_for(:lot, user: @current_user)
     end
 
-    it 'index lots page is allowed for all users' do
-      get :index
-      expect(response.status).to eq(200)
+    describe 'index lots page' do
+      before do
+        get :index
+      end
+
+      it 'is allowed for all users' do
+        expect(response.status).to eq(200)
+      end
     end
 
     it '/mylots page is unavailable for unregistred users' do

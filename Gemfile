@@ -56,3 +56,9 @@ gem 'rack-cors'
 gem 'validates_timeliness'
 # gem for using in FactoryBot
 gem 'faker'
+
+# gem for upload images
+gem 'carrierwave'
+
+# gem for pagination
+gem 'will_paginate'

@@ -4,7 +4,7 @@ class CreateLots < ActiveRecord::Migration[5.1]
       t.belongs_to :user, foreign_key: true
 
       t.string :title
-      t.string :description, :default => "null"
+      t.string :description, :default => ""
       t.float :current_price, :null => false
       t.float :estimated_price, :null => false
       t.datetime :lot_start_time, :null => false

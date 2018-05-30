@@ -7,9 +7,12 @@ Rails.application.routes.draw do
   get '/about' => 'home#about'
 
   # Lots routing
-  resources :lots
-  # route for show my lots
-  get '/mylots' => 'lots#mylots'
+  resources :lots do
+    collection do
+      # route for show my lots
+      get '/mylots' => 'lots#mylots'
+    end
+  end
   
   
 end
