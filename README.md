@@ -22,3 +22,7 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+General instruction:
+- clone this repository (git clone ...)
+- initialise Database: rake db:create, rake db:migrate, you can create seeds if you need (rake db:seed)

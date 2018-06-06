@@ -30,6 +30,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails'
   gem 'factory_bot_rails'
+  gem 'rails-controller-testing'
 end
 
 group :development do
@@ -50,3 +51,14 @@ gem 'devise'
 gem 'devise_token_auth'
 
 gem 'rack-cors'
+
+# datetime validation gem
+gem 'validates_timeliness'
+# gem for using in FactoryBot
+gem 'faker'
+
+# gem for upload images
+gem 'carrierwave'
+
+# gem for pagination
+gem 'will_paginate'

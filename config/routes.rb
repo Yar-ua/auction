@@ -5,5 +5,14 @@ Rails.application.routes.draw do
 
   # this route created for testing API
   get '/about' => 'home#about'
+
+  # Lots routing
+  resources :lots do
+    collection do
+      # route for show my lots
+      get '/mylots' => 'lots#mylots'
+    end
+  end
+  
   
 end

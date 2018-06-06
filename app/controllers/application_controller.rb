@@ -3,6 +3,11 @@ class ApplicationController < ActionController::API
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  # send response JSON
+  def send_response(data, status = 200)
+    render status: status, json: data.to_json
+  end
+
   protected
 
   def configure_permitted_parameters
