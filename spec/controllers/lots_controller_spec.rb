@@ -146,4 +146,30 @@ RSpec.describe LotsController, type: :controller do
     end
 
   end
+
+  # Test uploading images
+  describe "user loginned and upload image" do
+    before do
+      @current_user = FactoryBot.create(:user)
+      @new_lot = FactoryBot.attributes_for(:lot, :with_image, user: @current_user)
+      request.headers.merge! @current_user.create_new_auth_token
+
+      post :create, params: @new_lot
+    end
+
+    it 'can create lot with image' do
+      expect(response.status).to eq(200)
+    end
+
+    it 'lot was created' do
+      expect(@current_user.lots.count).to be >0
+    end
+
+    it "should uploads image data" do
+      expect(@new_lot[:image]).to be
+    end
+
+  end
+
+
 end

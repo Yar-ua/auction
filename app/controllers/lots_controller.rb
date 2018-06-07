@@ -59,7 +59,7 @@ class LotsController < ApplicationController
   # get lots params
   def lot_params
     params.permit(:title, :description, :current_price, :estimated_price, 
-      :lot_start_time, :lot_end_time)
+      :lot_start_time, :lot_end_time, :image)
   end
 
   # set current lot
