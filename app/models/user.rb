@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   # User can have many Lots
   has_many :lots, dependent: :destroy
+  # user have a bids
+  has_many :bids, dependent: :destroy
 
   # Set validations
   validates :phone, :email, uniqueness: {message: 'Current phone or email already exists, try another'}

@@ -6,7 +6,7 @@ class LotsController < ApplicationController
   WillPaginate.per_page = 10
 
   def index
-      @lots = Lot.all.paginate(:page => params[:page])
+      @lots = Lot.in_process.paginate(:page => params[:page])
       send_response(@lots)
   end
 
@@ -28,7 +28,11 @@ class LotsController < ApplicationController
   end
 
   def show
-    send_response(@lot)
+    if @lot.in_process?
+      send_response(@lot.bids)
+    else
+      send_response('Lot not found or status is not in_process', 404)
+    end
   end
 
   def update

@@ -4,9 +4,13 @@ FactoryBot.define do
     title { Faker::Name.title }
     description { Faker::Name.title }
     current_price { Faker::Commerce.price }
-    estimated_price { (Faker::Commerce.price * 5) }
+    estimated_price { (current_price + Faker::Commerce.price) }
     lot_start_time { (DateTime.now + 4.hours) }
     lot_end_time (DateTime.now + 12.hours)
+
+    trait :in_process do
+      status 1
+    end
 
     # add image to lot
     trait :with_image do

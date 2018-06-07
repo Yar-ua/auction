@@ -1,4 +1,5 @@
 class Lot < ApplicationRecord
+  mount_uploader :image, ImageUploader
   enum status: [:pending, :in_process, :closed]
 
   # Carriervawe uploader
@@ -6,6 +7,8 @@ class Lot < ApplicationRecord
   
   # User have a lot
   belongs_to :user
+  # lot have a bids
+  has_many :bids, dependent: :destroy
 
   # Set validation
   validates :title, :current_price, :estimated_price, :lot_start_time, 
