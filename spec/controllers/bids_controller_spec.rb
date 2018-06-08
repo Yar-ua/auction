@@ -58,9 +58,7 @@ RSpec.describe BidsController, type: :controller do
                 proposed_price: (@lot.current_price + 10)}
           expect(response).to have_http_status(200)
         end
-
       end
-
 
     end
   end

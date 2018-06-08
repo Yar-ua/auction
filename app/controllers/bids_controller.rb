@@ -6,15 +6,6 @@ class BidsController < ApplicationController
   #   send_response('')
   # end
 
-  ####
-  #### TODO implement checks of bid value, must be more than last bid and more than 
-  #### current price
-  #### add changing current_price by bid
-
-  # after creation update current_price
-
-  # after creation check estimated prise and set winner if need
-
   def create
     if current_user.id != @lot.user_id
       if @lot.in_process?
@@ -40,7 +31,6 @@ class BidsController < ApplicationController
   end
 
   def set_lot
-    # @lot = Lot.find(params[:lot_id])
     if Lot.exists?(params[:lot_id])
       @lot = Lot.find(params[:lot_id])
     else
