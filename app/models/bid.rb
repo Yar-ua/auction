@@ -6,4 +6,10 @@ class Bid < ApplicationRecord
   validates :proposed_price, presence: true
   validates :proposed_price, numericality: { only_integer: false, message: 'Value must be digit' }
   validates :proposed_price, numericality: { :greater_than_or_equal_to => 0 }
+
+  # after_create :update_current_price
+
+  # def update_current_price
+    
+  # end
 end

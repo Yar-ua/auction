@@ -1,11 +1,4 @@
 Rails.application.routes.draw do
-  # get 'bids/index'
-
-  # get 'bids/create'
-
-  # get 'lots/index'
-
-  # get 'lots/create'
 
   mount_devise_token_auth_for 'User', at: 'auth'
 
@@ -15,7 +8,7 @@ Rails.application.routes.draw do
   get '/about' => 'home#about'
 
   # Lots routing
-  resources :lots, except: [:new, :edit, :show] do
+  resources :lots, except: [:new, :edit] do
     collection do
       # route for show my lots
       get '/mylots' => 'lots#mylots'

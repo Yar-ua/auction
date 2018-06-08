@@ -19,6 +19,12 @@ RSpec.describe Bid, type: :model do
       @bid.proposed_price = 0.01
       expect(@bid).to be_valid
     end
+
+    it 'proposed_price must be exist' do
+      @bid.proposed_price = nil
+      expect(@bid).to be_invalid
+    end
+
   end
 
 end

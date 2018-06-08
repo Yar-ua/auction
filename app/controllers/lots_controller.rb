@@ -29,7 +29,7 @@ class LotsController < ApplicationController
 
   def show
     if @lot.in_process?
-      send_response(@lot.bids)
+      @lot.bids.exists? ? send_response(@lot + @lot.bids) : send_response(@lot)
     else
       send_response('Lot not found or status is not in_process', 404)
     end

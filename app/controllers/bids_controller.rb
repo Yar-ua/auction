@@ -11,6 +11,10 @@ class BidsController < ApplicationController
   #### current price
   #### add changing current_price by bid
 
+  # after creation update current_price
+
+  # after creation check estimated prise and set winner if need
+
   def create
     if current_user.id != @lot.user_id
       if @lot.in_process?
@@ -24,7 +28,7 @@ class BidsController < ApplicationController
         send_response('Forbidden - Lot is not in_process', 403)
       end
     else
-      send_response("Lot seller can't create bid", 403)
+      send_response("Lot seller can't create bid", 406)
     end
   end
 
@@ -36,9 +40,9 @@ class BidsController < ApplicationController
   end
 
   def set_lot
-    @lot = Lot.find(params[:lot_id])
-    if @lot.exists?
-      return @lot
+    # @lot = Lot.find(params[:lot_id])
+    if Lot.exists?(params[:lot_id])
+      @lot = Lot.find(params[:lot_id])
     else
       send_response('Lot not found', 404)
     end
