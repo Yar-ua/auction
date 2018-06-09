@@ -5,8 +5,8 @@ RSpec.describe LotsController, type: :controller do
   # Testing unsigned user
   describe 'testing lots routes if user didnt signed in' do
     before do
-      @current_user = FactoryBot.create(:user)
-      @new_lot = FactoryBot.attributes_for(:lot, user: @current_user)
+      @user = FactoryBot.create(:user)
+      @new_lot = FactoryBot.attributes_for(:lot, user: @user)
     end
 
     describe 'index lots page' do
@@ -44,9 +44,9 @@ RSpec.describe LotsController, type: :controller do
   # Testing, where user just signed in
   describe 'after user signed in' do
     before do
-      @current_user = FactoryBot.create(:user)
+      @user = FactoryBot.create(:user)
       @new_lot = FactoryBot.attributes_for(:lot)
-      request.headers.merge! @current_user.create_new_auth_token
+      request.headers.merge! @user.create_new_auth_token
     end
 
     it "get success result after sign_in" do
@@ -55,19 +55,46 @@ RSpec.describe LotsController, type: :controller do
 
     it "user can get message is response" do
       get :index
-      expect(response.status).to be
+      expect(response.status).to eq(200)
     end
 
-    describe "can get /mylots page after sign_in" do
+    describe "GET #lots/mylots can get /lots/mylots page after sign_in" do
       it "and any your lots didn't exists" do
         get :mylots
         expect(response.status).to eq(204)
       end
 
       it "and some of your lots already exists" do
-        new_lot = FactoryBot.create(:lot, user_id: @current_user.id)
+        new_lot = FactoryBot.create(:lot, user_id: @user.id)
         get :mylots
         expect(response.status).to eq(200)
+      end
+
+      describe 'test sorting on /lots/mylots' do
+        before do
+          @user = FactoryBot.create(:user)
+          request.headers.merge! @user.create_new_auth_token
+          @user_seller = FactoryBot.create(:user)
+          10.times do 
+            @lot = FactoryBot.create(:lot, user: @user_seller)
+            FactoryBot.create(:bid, user: @user, lot: @lot)
+          end
+        end
+
+        it 'with sort_type: created' do
+          get :mylots, params: {filter: :created}
+          lot_ids_from_response = JSON.parse(response.body).map { |lot_hash| lot_hash["id"] }
+          lot_ids = @user_seller.lots.map { |lot_id| lot_id["id"]}
+          expect(lot_ids_from_response).to match_array(lot_ids)
+        end
+
+        it 'with sort_type: participation' do
+          get :mylots, params: {filter: :participation}
+          lot_ids_from_response = JSON.parse(response.body).map { |lot_hash| lot_hash["id"] }
+          lot_ids = Lot.includes(:bids).where(bids: {user_id: @user.id}).map { |lot_id| lot_id["id"]}
+          expect(lot_ids_from_response).to match_array(lot_ids)
+        end
+###########################################
       end
     end
 
@@ -82,14 +109,14 @@ RSpec.describe LotsController, type: :controller do
       end
 
       it 'lot was created' do
-        expect(@current_user.lots.count).to be >0
+        expect(@user.lots.count).to be >0
       end
     end
 
     # Testing update lots
     describe 'user can update lot' do
       before do
-        @new_lot = FactoryBot.create(:lot, user_id: @current_user.id)
+        @new_lot = FactoryBot.create(:lot, user_id: @user.id)
       end
       
       it 'response is successfull' do
@@ -113,7 +140,7 @@ RSpec.describe LotsController, type: :controller do
         it 'foreign lot' do
           @foreign_user = FactoryBot.create(:user)
           @foreign_lot = FactoryBot.create(:lot, user: @foreign_user)
-          request.headers.merge! @current_user.create_new_auth_token
+          request.headers.merge! @user.create_new_auth_token
           put :update, params: {:id => @foreign_lot.id, :lot => @foreign_lot, status: :pending}
           expect(response.status).to eq(422)
         end
@@ -123,7 +150,7 @@ RSpec.describe LotsController, type: :controller do
     #Testing delete lots
     describe 'delete' do
       before do
-        @lot = FactoryBot.create(:lot, user: @current_user)
+        @lot = FactoryBot.create(:lot, user: @user)
       end
 
       it 'possible for own lots' do
@@ -150,9 +177,9 @@ RSpec.describe LotsController, type: :controller do
   # Test uploading images
   describe "user loginned and upload image" do
     before do
-      @current_user = FactoryBot.create(:user)
-      @new_lot = FactoryBot.attributes_for(:lot, :with_image, user: @current_user)
-      request.headers.merge! @current_user.create_new_auth_token
+      @user = FactoryBot.create(:user)
+      @new_lot = FactoryBot.attributes_for(:lot, :with_image, user: @user)
+      request.headers.merge! @user.create_new_auth_token
 
       post :create, params: @new_lot
     end
@@ -162,7 +189,7 @@ RSpec.describe LotsController, type: :controller do
     end
 
     it 'lot was created' do
-      expect(@current_user.lots.count).to be >0
+      expect(@user.lots.count).to be >0
     end
 
     it "should uploads image data" do

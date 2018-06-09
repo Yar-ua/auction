@@ -24,4 +24,17 @@ class Lot < ApplicationRecord
     end
   end
 
+  def self.sort_lots(sort_type)
+    case sort_type
+    when "created"
+      @my_lots = current_user.lots
+    when "participation"
+      @my_lots = Lot.includes(:bids).where(bids: {user_id: current_user.id})
+    else
+      # if sort_type 'all' or other
+      @my_lots = Lot.all
+    end
+    return @my_lots
+  end
+
 end

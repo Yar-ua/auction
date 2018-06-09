@@ -2,10 +2,6 @@ class BidsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_lot
 
-  # def index
-  #   send_response('')
-  # end
-
   def create
     if current_user.id != @lot.user_id
       if @lot.in_process?
@@ -26,10 +22,12 @@ class BidsController < ApplicationController
 
   private
 
+  # get bid params
   def bid_params
     params.permit(:lot_id, :proposed_price)
   end
 
+  # set current lot
   def set_lot
     if Lot.exists?(params[:lot_id])
       @lot = Lot.find(params[:lot_id])

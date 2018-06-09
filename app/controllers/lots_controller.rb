@@ -1,7 +1,6 @@
 class LotsController < ApplicationController
   before_action :authenticate_user!, except: :index
   before_action :set_lot, only: [:show, :update, :destroy]
-  before_action :set_my_lots, only: [:mylots]
 
   WillPaginate.per_page = 10
 
@@ -11,6 +10,7 @@ class LotsController < ApplicationController
   end
 
   def mylots
+    @my_lots = Lot.sort_lots(params[:sort_type]).paginate(:page => params[:page])
     if @my_lots.empty?
       send_response("You haven't your lots yet", 204)
     else
@@ -29,7 +29,7 @@ class LotsController < ApplicationController
 
   def show
     if @lot.in_process?
-      @lot.bids.exists? ? send_response(@lot + @lot.bids) : send_response(@lot)
+      @lot.bids.exists? ? send_response(lot: @lot, bids: @lot.bids) : send_response(@lot)
     else
       send_response('Lot not found or status is not in_process', 404)
     end
@@ -72,8 +72,8 @@ class LotsController < ApplicationController
   end
 
   # set lots where user is seller or user created some bids
-  def set_my_lots
-    @my_lots = current_user.lots.paginate(:page => params[:page])
-  end
+  # def set_my_lots
+  #   @my_lots = current_user.lots.paginate(:page => params[:page])
+  # end
 
 end
