@@ -59,12 +59,7 @@ RSpec.describe LotsController, type: :controller do
     end
 
     describe "GET #lots/mylots can get /lots/mylots page after sign_in" do
-      it "and any your lots didn't exists" do
-        get :mylots
-        expect(response.status).to eq(204)
-      end
-
-      it "and some of your lots already exists" do
+      it "you take lots and status-code 200" do
         new_lot = FactoryBot.create(:lot, user_id: @user.id)
         get :mylots
         expect(response.status).to eq(200)
@@ -91,10 +86,14 @@ RSpec.describe LotsController, type: :controller do
         it 'with sort_type: participation' do
           get :mylots, params: {filter: :participation}
           lot_ids_from_response = JSON.parse(response.body).map { |lot_hash| lot_hash["id"] }
-          lot_ids = Lot.includes(:bids).where(bids: {user_id: @user.id}).map { |lot_id| lot_id["id"]}
+          lot_ids = Lot.joins(:bids).where(bids: { user_id: @user.id }).map { |lot_id| lot_id["id"]}
           expect(lot_ids_from_response).to match_array(lot_ids)
         end
-###########################################
+
+        it 'with sort_type: != participation and != created' do
+## TOODD
+        end
+
       end
     end
 

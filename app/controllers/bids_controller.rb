@@ -12,7 +12,7 @@ class BidsController < ApplicationController
           send_response('Bid not created', 400)
         end
       else
-        send_response('Forbidden - Lot is not in_process', 403)
+        send_response("Lot seller can't create bid", 403)
       end
     else
       send_response("Lot seller can't create bid", 406)
@@ -29,11 +29,32 @@ class BidsController < ApplicationController
 
   # set current lot
   def set_lot
-    if Lot.exists?(params[:lot_id])
+    begin
       @lot = Lot.find(params[:lot_id])
-    else
+    rescue Exception => e
       send_response('Lot not found', 404)
     end
   end
 
+  # def user_not_lot_owner
+  #   return current_user.id != @lot.user_id
+  # end
+
 end
+
+  # def create
+  #   if current_user.id != @lot.user_id
+  #     if @lot.in_process?
+  #       @bid = current_user.bids.build(bid_params)
+  #       if @bid.save
+  #         send_response(@bid)
+  #       else
+  #         send_response('Bid not created', 400)
+  #       end
+  #     else
+  #       raise 'Forbidden - Lot is not in_process'
+  #     end
+  #   else
+  #     send_response("Lot seller can't create bid", 406)
+  #   end
+  # end

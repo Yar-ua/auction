@@ -23,15 +23,18 @@ RSpec.describe BidsController, type: :controller do
         request.headers.merge! @user_seller.create_new_auth_token
       end
 
-      it 'if lot with current id not exists or not finded - response status 404' do
+      it 'if lot with current id not exists or not finded - exception "Lot not found"' do
         post :create, params: {lot_id: 123456, proposed_price: 10}
         expect(response).to have_http_status(404)
+        expect(JSON.parse(response.body)).to eq('Lot not found')
       end
 
       describe 'is seller of lot' do
         it 'if user is seller of the lot - he cant create bid' do
           post :create, params: {lot_id: @lot.id, proposed_price: 10}
           expect(response).to have_http_status(406)
+          #expect(post :create, params: {lot_id: @lot.id, proposed_price: 10}).to raise_error(Errors::RuntimeError)
+          #expect(response.exception).should eq('sss') #raise_error(Error::RuntimeError)
         end
       end
 

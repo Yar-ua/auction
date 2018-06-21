@@ -29,7 +29,8 @@ class Lot < ApplicationRecord
     when "created"
       @my_lots = current_user.lots
     when "participation"
-      @my_lots = Lot.includes(:bids).where(bids: {user_id: current_user.id})
+      #@my_lots = Lot.includes(:bids).where(bids: {user_id: current_user.id})
+      @my_lots = Lot.joins(:bids).where(bids: { user_id: current_user.id })
     else
       # if sort_type 'all' or other
       @my_lots = Lot.all

@@ -10,19 +10,21 @@ class Bid < ApplicationRecord
   before_create :proposed_price_is_valid
 
   after_create :update_lot_current_price
-  after_create :is_winner
+  after_create :check_is_winner
 
   def update_lot_current_price
     self.lot.current_price = proposed_price
+    self.lot.save
   end
 
   def proposed_price_is_valid
-    (self.lot.current_price < proposed_price) ? true : false
+    self.lot.current_price < proposed_price
   end
 
   def check_is_winner
     if self.lot.estimated_price <= proposed_price
       self.is_winner = true
+      self.save
       # method closed! update all data changed in object, is_winner it update too
       self.lot.closed!
     end
