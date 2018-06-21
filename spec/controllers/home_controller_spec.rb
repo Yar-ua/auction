@@ -14,8 +14,7 @@ RSpec.describe HomeController, type: :controller do
 
   describe 'loggined user' do
     before do
-      @user = FactoryBot.create(:user)
-      request.headers.merge! @user.create_new_auth_token
+      login_user
     end
 
     it 'loggined user cant see about page' do

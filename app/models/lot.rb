@@ -1,5 +1,4 @@
 class Lot < ApplicationRecord
-  mount_uploader :image, ImageUploader
   enum status: [:pending, :in_process, :closed]
 
   # Carriervawe uploader

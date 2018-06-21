@@ -7,7 +7,7 @@ RSpec.describe Bid, type: :model do
     before do
       @user = FactoryBot.create(:user)
       @lot = FactoryBot.create(:lot, :in_process, user: @user)
-      @bid = FactoryBot.create(:bid, user: @user, lot: @lot)
+      @bid = FactoryBot.create(:bid, user: @user, lot: @lot, proposed_price: @lot.current_price + 1)
     end
 
     it 'proposed_price cant be less than 0' do
@@ -55,11 +55,12 @@ RSpec.describe Bid, type: :model do
                             proposed_price: @lot.estimated_price - 1)
           @bid.check_is_winner
         end
+
         it 'not change :is_winner status' do
           expect(@bid.is_winner).to be false
         end
 
-        it 'lot must change status :in_process' do
+        it 'lot must have status :in_process' do
           expect(@lot.status).to eq('in_process')
         end
       end

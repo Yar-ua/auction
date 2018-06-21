@@ -25,7 +25,6 @@ class Bid < ApplicationRecord
     if self.lot.estimated_price <= proposed_price
       self.is_winner = true
       self.save
-      # method closed! update all data changed in object, is_winner it update too
       self.lot.closed!
     end
   end

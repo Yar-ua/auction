@@ -44,9 +44,8 @@ RSpec.describe LotsController, type: :controller do
   # Testing, where user just signed in
   describe 'after user signed in' do
     before do
-      @user = FactoryBot.create(:user)
+      login_user
       @new_lot = FactoryBot.attributes_for(:lot)
-      request.headers.merge! @user.create_new_auth_token
     end
 
     it "get success result after sign_in" do
@@ -67,8 +66,7 @@ RSpec.describe LotsController, type: :controller do
 
       describe 'test sorting on /lots/mylots' do
         before do
-          @user = FactoryBot.create(:user)
-          request.headers.merge! @user.create_new_auth_token
+          login_user
           @user_seller = FactoryBot.create(:user)
           10.times do 
             @lot = FactoryBot.create(:lot, user: @user_seller)
@@ -181,9 +179,8 @@ RSpec.describe LotsController, type: :controller do
   # Test uploading images
   describe "user loginned and upload image" do
     before do
-      @user = FactoryBot.create(:user)
+      login_user
       @new_lot = FactoryBot.attributes_for(:lot, :with_image, user: @user)
-      request.headers.merge! @user.create_new_auth_token
 
       post :create, params: @new_lot
     end

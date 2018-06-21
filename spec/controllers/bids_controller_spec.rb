@@ -24,35 +24,43 @@ RSpec.describe BidsController, type: :controller do
       end
 
       it 'if lot with current id not exists or not finded - exception "Lot not found"' do
-        post :create, params: {lot_id: 123456, proposed_price: 10}
-        expect(response).to have_http_status(404)
-        expect(JSON.parse(response.body)).to eq('Lot not found')
+        expect {
+          post :create, params: {lot_id: 123456, proposed_price: 10}
+          }.to raise_error
       end
 
       describe 'is seller of lot' do
         it 'if user is seller of the lot - he cant create bid' do
-          post :create, params: {lot_id: @lot.id, proposed_price: 10}
-          expect(response).to have_http_status(406)
-          #expect(post :create, params: {lot_id: @lot.id, proposed_price: 10}).to raise_error(Errors::RuntimeError)
-          #expect(response.exception).should eq('sss') #raise_error(Error::RuntimeError)
+          expect {
+            post :create, params: {lot_id: @lot.id, proposed_price: 10} 
+          }.to raise_error('Lot seller cant create bid')
         end
       end
 
       describe 'is customer of lot' do
         before do
-          @user = FactoryBot.create(:user)
-          request.headers.merge! @user.create_new_auth_token
+          login_user
         end
 
         it 'cant create bid if lot have :pending status' do
-          post :create, params: {lot_id: @lot_pending.id, 
-                proposed_price: (@lot_pending.current_price + 10)}
-          expect(response).to have_http_status(403)
+          expect {
+            post :create, params: {lot_id: @lot_pending.id, 
+              proposed_price: (@lot_pending.current_price + 10)}
+          }.to raise_error('Forbidden - lot status is not in_process')
         end
 
         it 'cant create bid if lot have :closed status' do
-          post :create, params: {lot_id: @lot_pending.id, 
-                proposed_price: (@lot_pending.current_price + 10)}
+          expect {
+            post :create, params: {lot_id: @lot_pending.id, 
+              proposed_price: (@lot_pending.current_price + 10)}
+          }.to raise_error('Forbidden - lot status is not in_process')
+        end
+
+        it 'if bid have mistakes - response bid errors' do
+          @newbid = @user.bids.build(lot_id: @lot.id)
+          @newbid.valid?
+          post :create, params: {lot_id: @lot.id, user_id: @user.id}
+          expect(response.body).to eq(@newbid.errors.messages.to_json)
           expect(response).to have_http_status(403)
         end
 
