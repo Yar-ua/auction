@@ -10,7 +10,7 @@ class LotsController < ApplicationController
   end
 
   def mylots
-    @my_lots = Lot.sort_lots(params[:sort_type]).paginate(:page => params[:page])
+    @my_lots = Lot.sort_lots(params[:sort_type], current_user).paginate(:page => params[:page])
     if @my_lots.empty?
       send_response("You haven't your lots yet", 204)
     else

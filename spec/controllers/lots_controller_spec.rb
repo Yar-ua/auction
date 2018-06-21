@@ -91,7 +91,12 @@ RSpec.describe LotsController, type: :controller do
         end
 
         it 'with sort_type: != participation and != created' do
-## TOODD
+          get :mylots, params: {filter: :all}
+          expect(response.status).to eq(200)
+          lot_ids_from_response = JSON.parse(response.body).map { |lot_hash| lot_hash["id"] }
+          lot_ids = Lot.left_joins(:bids).where("lots.user_id = ? OR bids.user_id = ?", @user.id, @user.id)
+                    .map { |lot_id| lot_id["id"]}
+          expect(lot_ids_from_response).to match_array(lot_ids)
         end
 
       end
