@@ -31,7 +31,6 @@ class Lot < ApplicationRecord
       @my_lots = Lot.joins(:bids).where(bids: { user_id: user.id })
     else
       @my_lots = Lot.left_joins(:bids).where("lots.user_id = ? OR bids.user_id = ?", user.id, user.id)
-      #@my_lots = Lot.all
     end
     return @my_lots
   end
