@@ -18,3 +18,5 @@
 # ignore RubyMine
 .idea/*.xml
 .idea/*
+
+dump.rdb

@@ -9,6 +9,18 @@ require 'rspec/rails'
 require 'devise'
 require 'support/factory_bot'
 
+require 'sidekiq'
+# Configuring rspec-sidekiq
+require "sidekiq/testing"
+RSpec::Sidekiq.configure do |config|
+  # Clears all job queues before each example
+  config.clear_all_enqueued_jobs = true # default => true
+  # Whether to use terminal colours when outputting messages
+  config.enable_terminal_colours = true # default => true
+  # Warn when jobs are not enqueued to Redis but to a job array
+  config.warn_when_jobs_not_processed_by_sidekiq = false # default => true
+end
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end

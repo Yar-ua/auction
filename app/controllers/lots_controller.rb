@@ -71,9 +71,4 @@ class LotsController < ApplicationController
     @lot = Lot.find(params[:id])
   end
 
-  # set lots where user is seller or user created some bids
-  # def set_my_lots
-  #   @my_lots = current_user.lots.paginate(:page => params[:page])
-  # end
-
 end

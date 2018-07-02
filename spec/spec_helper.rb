@@ -13,7 +13,16 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+# require 'sidekiq/testing'
+# Sidekiq::Testing.fake!
+
 RSpec.configure do |config|
+
+  # clear all jobs before testing
+  config.before(:each) do
+    Sidekiq::Worker.clear_all
+  end
 
   # delete images after tests of Carrierwave
   config.after(:each) do

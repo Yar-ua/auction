@@ -17,6 +17,8 @@ class Lot < ApplicationRecord
   validates_datetime :lot_end_time, :after => :lot_start_time
   validate :price_right_difference
 
+  after_create :create_jobs
+
   def price_right_difference
     if ( estimated_price > current_price )
       return true 
@@ -33,6 +35,17 @@ class Lot < ApplicationRecord
       @my_lots = Lot.left_joins(:bids).where("lots.user_id = ? OR bids.user_id = ?", user.id, user.id)
     end
     return @my_lots
+  end
+
+  # def create_status_job(time, status)
+  #   JobWorker.perform_at(time, id, status)
+  # end
+
+  def create_jobs
+    in_process_job = JobWorker.perform_at(lot_start_time, id, :in_process)
+    close_job = JobWorker.perform_at(lot_end_time, id, :closed)
+    # create_status_job(lot_start_time, :in_process)
+    # create_status_job(lot_end_time, :closed)
   end
 
 end
