@@ -37,15 +37,11 @@ class Lot < ApplicationRecord
     return @my_lots
   end
 
-  # def create_status_job(time, status)
-  #   JobWorker.perform_at(time, id, status)
-  # end
-
   def create_jobs
     in_process_job = JobWorker.perform_at(lot_start_time, id, :in_process)
     close_job = JobWorker.perform_at(lot_end_time, id, :closed)
-    # create_status_job(lot_start_time, :in_process)
-    # create_status_job(lot_end_time, :closed)
+    # in_process_job = LotStatusJob.perform_at(lot_start_time, id, :in_process)
+    # close_job = LotStatusJob.perform_at(lot_end_time, id, :closed)
   end
 
 end
