@@ -10,10 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180520150134) do
+ActiveRecord::Schema.define(version: 20180607132357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bids", force: :cascade do |t|
+    t.bigint "lot_id"
+    t.bigint "user_id"
+    t.float "proposed_price", null: false
+    t.boolean "is_winner", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["is_winner"], name: "index_bids_on_is_winner"
+    t.index ["lot_id"], name: "index_bids_on_lot_id"
+    t.index ["proposed_price"], name: "index_bids_on_proposed_price"
+    t.index ["user_id"], name: "index_bids_on_user_id"
+  end
 
   create_table "lots", force: :cascade do |t|
     t.bigint "user_id"
@@ -26,6 +39,7 @@ ActiveRecord::Schema.define(version: 20180520150134) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "status", default: 0
+    t.string "image"
     t.index ["lot_end_time"], name: "index_lots_on_lot_end_time"
     t.index ["lot_start_time"], name: "index_lots_on_lot_start_time"
     t.index ["user_id"], name: "index_lots_on_user_id"
@@ -62,5 +76,7 @@ ActiveRecord::Schema.define(version: 20180520150134) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "bids", "lots"
+  add_foreign_key "bids", "users"
   add_foreign_key "lots", "users"
 end

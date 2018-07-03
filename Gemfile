@@ -59,6 +59,8 @@ gem 'faker'
 
 # gem for upload images
 gem 'carrierwave'
+# for using with carrierwave and creation thumb images
+gem "mini_magick"
 
 # gem for pagination
 gem 'will_paginate'
