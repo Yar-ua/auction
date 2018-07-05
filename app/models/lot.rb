@@ -18,6 +18,8 @@ class Lot < ApplicationRecord
   validate :price_right_difference
 
   after_create :create_jobs
+  before_update :update_jobs
+  # before_destroy :delete_jobs
 
   def price_right_difference
     if ( estimated_price > current_price )
@@ -40,10 +42,23 @@ class Lot < ApplicationRecord
   def create_jobs
     jid_in_process = create_job(lot_start_time, id, :in_process)
     jid_closed = create_job(lot_end_time, id, :closed)
+    update_columns(jid_in_process: jid_in_process, jid_closed: jid_closed)
   end
 
   def create_job(time, lot_id, status)
     return JobWorker.perform_at(time, lot_id, status)
+  end
+
+  def update_jobs
+    if lot_start_time_changed?
+      jid_in_process = create_job(lot_start_time, id, :in_process)
+      update_column(:jid_in_process, jid_in_process)
+    end
+
+    if lot_end_time_changed?
+      jid_closed = create_job(lot_end_time, id, :closed)
+      update_column(:jid_closed, jid_closed)
+    end
   end
 
 end
