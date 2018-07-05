@@ -1,11 +1,8 @@
 FactoryBot.define do
-  sequence(:email) { |n| "user-#{n}@example.com" }
-  sequence(:phone) { |n| "3805011122#{n}" }
-
   factory :user do
-    email
+    email { Faker::Internet.unique.email }
     password { Faker::Internet.unique.password }
-    phone
+    phone { Faker::PhoneNumber.cell_phone }
     first_name { Faker::Name.unique.first_name }
     last_name { Faker::Name.unique.last_name }
     birth_day Faker::Date.birthday (DateTime.now.year - 21)

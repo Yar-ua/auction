@@ -12,10 +12,6 @@ RSpec.describe JobWorker, type: :worker do
   it { should be_retryable true }
 
   describe 'job for changing lots status:' do
-    # before do
-    #   JobWorker.perform_at(DateTime.now + 3.minutes, @lot.id, :in_process)
-    # end
-
     it 'any job can be created' do
       expect {JobWorker.perform_at(DateTime.now + 3.minutes, @lot.id, :in_process)}.to change(JobWorker.jobs, :size).by(1)
     end
@@ -25,9 +21,5 @@ RSpec.describe JobWorker, type: :worker do
       JobWorker.perform_at @time, @lot.id, :in_process
       expect(JobWorker).to have_enqueued_sidekiq_job(@lot.id, 'in_process').at(@time)
     end
-
   end
-
-
-
 end
