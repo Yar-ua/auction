@@ -19,10 +19,38 @@ class Lot < ApplicationRecord
 
   after_create :create_jobs
   before_update :update_jobs
-  # before_destroy :delete_jobs
+  after_save :send_win_emails, :if => :lot_was_closed
+
+  def lot_was_closed
+    return self.closed?
+  end
+
+  def send_win_emails
+    # check - if lot have some bids - set the biggest bid like winner
+    set_last_bid_like_winner(self)
+    if self.bids.empty? == false
+      @win_bid = self.bids.order(proposed_price: :desc).first
+      @win_bid.is_winner = true
+      @win_bid.save
+
+      if self.bids.where(is_winner: true) != nil
+        SellerMailer.send_lot_closed_email(self).deliver_later
+        CustomerMailer.send_winning_lot_email(self.bids.where(is_winner: true)).deliver_later
+      end
+    end
+
+  end
+
+  def set_last_bid_like_winner(lot)
+    if self.bids.empty? == false
+      @win_bid = self.bids.order(proposed_price: :desc).first
+      @win_bid.is_winner = true
+      @win_bid.save
+    end
+  end
 
   def price_right_difference
-    if ( estimated_price > current_price )
+    if (estimated_price > current_price)
       return true 
     end
   end

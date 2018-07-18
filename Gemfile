@@ -64,3 +64,4 @@ gem "mini_magick"
 gem 'will_paginate'
 # gem for background jobs
 gem 'sidekiq'
+gem "figaro"
