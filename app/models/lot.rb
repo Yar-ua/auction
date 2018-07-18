@@ -19,34 +19,34 @@ class Lot < ApplicationRecord
 
   after_create :create_jobs
   before_update :update_jobs
-  after_save :send_win_emails, :if => :lot_was_closed
+  after_save :send_win_emails, :if => :lot_was_closed?
 
-  def lot_was_closed
-    return self.closed?
+  def lot_was_closed?
+    self.closed?
   end
 
   def send_win_emails
     # check - if lot have some bids - set the biggest bid like winner
-    set_last_bid_like_winner(self)
-    if self.bids.empty? == false
-      @win_bid = self.bids.order(proposed_price: :desc).first
-      @win_bid.is_winner = true
-      @win_bid.save
-
-      if self.bids.where(is_winner: true) != nil
-        SellerMailer.send_lot_closed_email(self).deliver_later
-        CustomerMailer.send_winning_lot_email(self.bids.where(is_winner: true)).deliver_later
-      end
+    if self.bids.empty?
+      # send notifications if lot wasn't sold - just for seller
+      SellerMailer.send_lot_closed_by_timeout_email(self).deliver_later
+    else
+      # send notifications if lot was sold - for customer and seller
+      @bid = set_last_bid_like_winner
+      SellerMailer.send_lot_closed_email(self).deliver_later
+      CustomerMailer.send_winning_lot_email(@bid).deliver_later
     end
-
   end
 
-  def set_last_bid_like_winner(lot)
-    if self.bids.empty? == false
+  def set_last_bid_like_winner
+    if self.bids.where(is_winner: true).empty? == false
+      @win_bid = self.bids.where(is_winner: true).order(proposed_price: :desc).first
+    else
       @win_bid = self.bids.order(proposed_price: :desc).first
       @win_bid.is_winner = true
       @win_bid.save
     end
+    return @win_bid
   end
 
   def price_right_difference
