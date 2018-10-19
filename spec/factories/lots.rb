@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :lot do
     association :user, :factory => :user
-    title { Faker::Name.title }
-    description { Faker::Name.title }
+    title { Faker::Job.title }
+    description { Faker::Job.title }
     current_price { Faker::Commerce.price }
     estimated_price { (current_price + 40 * Faker::Commerce.price) }
     lot_start_time { (DateTime.now + 4.hours) }

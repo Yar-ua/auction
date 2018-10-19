@@ -64,4 +64,5 @@ gem "mini_magick"
 gem 'will_paginate'
 # gem for background jobs
 gem 'sidekiq'
+# gem for secret keys in environment
 gem "figaro"
