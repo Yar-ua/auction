@@ -25,4 +25,9 @@ Things you may want to cover:
 
 General instruction:
 - clone this repository (git clone ...)
+- install redis-server, sidekiq and other gems, what app need
 - initialise Database: rake db:create, rake db:migrate, you can create seeds if you need (rake db:seed)
+- run 'redis-server'
+- run 'sidekiq'
+- run 'rails-server'
+- enjoy :)

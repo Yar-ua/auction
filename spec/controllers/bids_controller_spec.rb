@@ -52,7 +52,7 @@ RSpec.describe BidsController, type: :controller do
         it 'cant create bid if lot have :closed status' do
           expect {
             post :create, params: {lot_id: @lot_pending.id, 
-              proposed_price: (@lot_pending.current_price + 10)}
+              proposed_price: (@lot_closed.current_price + 10)}
           }.to raise_error('Forbidden - lot status is not in_process')
         end
 
@@ -69,6 +69,7 @@ RSpec.describe BidsController, type: :controller do
                 proposed_price: (@lot.current_price + 10)}
           expect(response).to have_http_status(200)
         end
+
       end
 
     end

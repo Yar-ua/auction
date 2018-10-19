@@ -1,4 +1,6 @@
 require 'rails_helper'
+require "sidekiq/testing"
+Sidekiq::Testing.fake!
 
 RSpec.describe Lot, type: :model do
 
@@ -61,6 +63,32 @@ RSpec.describe Lot, type: :model do
       new_lot = Lot.new lot_attrs
       expect(new_lot).to be_invalid
     end
+  end
+
+  it 'if lot closed - it cant be changed' do
+    lot.closed!
+  end
+
+  describe 'Testing lot workers' do
+    describe 'must be created after creation lot' do
+      it { expect(:jid_in_process).not_to eq('null')}
+      it { expect(:jid_closed).not_to eq(nil)}
+    end
+
+    it 'if lot update - workeers update too' do
+      @lot = FactoryBot.create(:lot, :user_id => user.id)
+      jid_in_process = @lot.jid_in_process
+      jid_closed = @lot.jid_closed
+      @lot.update_attribute(:lot_start_time, @lot.lot_start_time - 1.second)
+      expect(@lot.jid_in_process).not_to eq(jid_in_process)
+      @lot.update_attribute(:lot_end_time, @lot.lot_end_time + 1.second)
+      expect(@lot.jid_closed).not_to eq(jid_closed)
+    end
+
+    it 'creation lot create workers' do
+      expect{FactoryBot.create(:lot, :user_id => user.id)}.to change(JobWorker.jobs, :size).by(2)
+    end
+
   end
 
 end

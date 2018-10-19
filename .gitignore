@@ -18,3 +18,7 @@
 # ignore RubyMine
 .idea/*.xml
 .idea/*
+
+dump.rdb
+# Ignore application configuration
+/config/application.yml

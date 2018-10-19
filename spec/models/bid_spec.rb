@@ -10,6 +10,12 @@ RSpec.describe Bid, type: :model do
       @bid = FactoryBot.create(:bid, user: @user, lot: @lot, proposed_price: @lot.current_price + 1)
     end
 
+    describe 'bid must have important attributes' do
+      it { expect(:lot_id).to be}
+      it { expect(:user_id).to be}
+      it { expect(:proposed_price).to be}
+    end
+
     it 'proposed_price cant be less than 0' do
       @bid.proposed_price = -10
       expect(@bid).to be_invalid

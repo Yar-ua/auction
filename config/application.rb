@@ -35,5 +35,6 @@ module Auction
           :methods => [:get, :post, :options, :delete, :put]
       end
     end
+    config.active_job.queue_adapter = :sidekiq
   end
 end

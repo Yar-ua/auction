@@ -127,8 +127,14 @@ RSpec.describe LotsController, type: :controller do
         expect(response.status).to eq(200)
       end
 
-      it 'but cant if status is not "pending"' do
+      it 'but cant if status is in_process' do
         @new_lot.in_process!
+        put :update, params: {:id => @new_lot.id, :lot => @new_lot, status: :in_process}
+        expect(response.status).to eq(422)
+      end
+
+      it 'but cant if status is closed' do
+        @new_lot.closed!
         put :update, params: {:id => @new_lot.id, :lot => @new_lot, status: :in_process}
         expect(response.status).to eq(422)
       end

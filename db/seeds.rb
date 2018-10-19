@@ -12,7 +12,7 @@
   end
 end
 
-for i in 1..5 do
+for i in 2..6 do
   3.times do
     FactoryBot.create(:bid, user: User.find(i + 1), lot: Lot.find(i))
   end

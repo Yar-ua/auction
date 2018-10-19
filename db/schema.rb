@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180607132357) do
+ActiveRecord::Schema.define(version: 20180705092908) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,8 @@ ActiveRecord::Schema.define(version: 20180607132357) do
     t.datetime "updated_at", null: false
     t.integer "status", default: 0
     t.string "image"
+    t.string "jid_in_process"
+    t.string "jid_closed"
     t.index ["lot_end_time"], name: "index_lots_on_lot_end_time"
     t.index ["lot_start_time"], name: "index_lots_on_lot_start_time"
     t.index ["user_id"], name: "index_lots_on_user_id"
