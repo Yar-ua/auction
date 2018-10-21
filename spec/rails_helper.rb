@@ -12,6 +12,7 @@ require 'support/factory_bot'
 require 'sidekiq'
 # Configuring rspec-sidekiq
 require "sidekiq/testing"
+require "action_cable/testing/rspec"
 RSpec::Sidekiq.configure do |config|
   # Clears all job queues before each example
   config.clear_all_enqueued_jobs = true # default => true
