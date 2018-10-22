@@ -28,6 +28,7 @@ General instruction:
 - install redis-server, sidekiq and other gems, what app need
 - initialise Database: rake db:create, rake db:migrate, you can create seeds if you need (rake db:seed)
 - run 'redis-server'
-- run 'sidekiq'
+- run 'sidekiq -q high' 	# inportant! must be '-q high'
+	('-q high' is for setting name of queue. On this auction name of queue is "high". If you start sidekiq without configs - will be started with queue name as "default")
 - run 'rails-server'
 - enjoy :)

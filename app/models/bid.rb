@@ -12,6 +12,8 @@ class Bid < ApplicationRecord
   after_create :update_lot_current_price
   after_create :check_is_winner
 
+  after_create :perform_broadcast
+
   def update_lot_current_price
     self.lot.current_price = proposed_price
     self.lot.save
@@ -27,6 +29,10 @@ class Bid < ApplicationRecord
       self.save
       self.lot.closed!
     end
+  end
+
+  def perform_broadcast
+    BidBroadcastWorker.perform_async(self.to_json)
   end
 
 end
