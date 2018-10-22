@@ -1,5 +1,4 @@
 class Bid < ApplicationRecord
-  has_one :order, dependent: :destroy
   belongs_to :lot
   belongs_to :user
 

@@ -8,6 +8,8 @@ class Lot < ApplicationRecord
   belongs_to :user
   # lot have a bids
   has_many :bids, dependent: :destroy
+  # lot have just one order
+  has_one :order, dependent: :destroy
 
   # Set validation
   validates :title, :current_price, :estimated_price, :lot_start_time, 
