@@ -18,7 +18,7 @@ FactoryBot.define do
 
     # add image to lot
     trait :with_image do
-      image Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, "spec/fixtures/images/ror.png")))
+      image { Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, "spec/fixtures/images/ror.png"))) }
     end
 
   end

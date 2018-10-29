@@ -48,13 +48,13 @@ ActiveRecord::Schema.define(version: 20181022193617) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.bigint "bid_id"
+    t.bigint "lot_id"
     t.string "arrival_location", null: false
     t.integer "arrival_status", default: 0
     t.integer "arrival_type", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["bid_id"], name: "index_orders_on_bid_id"
+    t.index ["lot_id"], name: "index_orders_on_lot_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -91,5 +91,5 @@ ActiveRecord::Schema.define(version: 20181022193617) do
   add_foreign_key "bids", "lots"
   add_foreign_key "bids", "users"
   add_foreign_key "lots", "users"
-  add_foreign_key "orders", "bids"
+  add_foreign_key "orders", "lots"
 end

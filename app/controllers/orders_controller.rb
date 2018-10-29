@@ -6,6 +6,7 @@ class OrdersController < ApplicationController
 
   def create
     @order = @lot.order.build(order_params)
+    @order.arrival_status = "pending"
     if @order.save
       send_response(@order)
     else
@@ -15,10 +16,12 @@ class OrdersController < ApplicationController
 
   def sent
     @lot.order.sent!
+    send_response(@lot.order, 200)
   end
 
   def delivered
     @lot.order.delivered!
+    send_response(@lot.order, 200)
   end
 
   private
@@ -33,11 +36,20 @@ class OrdersController < ApplicationController
   end
 
   def check_customer
-    # if (current_user != @lot.user) and 
+    @bid = Bid.where(lot_id: @lot.id, is_winner: true).first
+    if (@bid.exists?) and (current_user != @lot.user) and (current_user == @bid.user)
+      return true
+    else
+      raise Exception.new('Forbidden! Only customer can change this status')
+    end
   end
 
   def check_seller
-    #
+    if current_user == @lot.user
+      return true
+    else
+      raise Exception.new('Forbidden! Only seller can change this status')
+    end
   end
 
 end
