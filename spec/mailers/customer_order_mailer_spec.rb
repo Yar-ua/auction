@@ -4,16 +4,16 @@ RSpec.describe CustomerMailer, type: :mailer do
   describe 'send_winning_lot_email' do
     before do
       @user = FactoryBot.create(:user)
-      @lot = FactoryBot.create(:lot, :in_process, user: @user)
+      @seller = FactoryBot.create(:user)
+      @lot = FactoryBot.create(:lot, :in_process, user: @seller)
       @bid = FactoryBot.create(:bid, :winner, user: @user, lot: @lot, proposed_price: @lot.current_price + 1)
       @order = FactoryBot.create(:order, lot: @lot)
-      @mail = described_class.send_winning_lot_email(@bid).deliver_now
-      @order_sent_email = described_class.order_sent_email(@order).deliver_now
+      @mail = described_class.order_sent_email(@order).deliver_now
     end
 
     it 'mail have lot' do
       expect(@mail.subject).to eq(
-        "You are winner in the lot " + @lot.title + " with your bid " + @bid.proposed_price.to_s)
+        "Your lot " + @lot.title + " was sent")
     end
 
     it 'renders the receiver email' do
