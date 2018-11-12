@@ -1,11 +1,11 @@
 class OrdersController < ApplicationController
-  before_action :authenticate_user!, except: :index
+  before_action :authenticate_user!
   before_action :set_lot
   before_action :check_customer, only: [:create, :delivered]
   before_action :check_seller, only: [:sent]
 
   def create
-    @order = @lot.order.build(order_params)
+    @order = @lot.build_order(order_params)
     @order.arrival_status = "pending"
     if @order.save
       send_response(@order)
@@ -37,7 +37,7 @@ class OrdersController < ApplicationController
 
   def check_customer
     @bid = Bid.where(lot_id: @lot.id, is_winner: true).first
-    if (@bid.exists?) and (current_user != @lot.user) and (current_user == @bid.user)
+    if ((@bid.is_winner == true) and (current_user != @lot.user) and (current_user == @bid.user))
       return true
     else
       raise Exception.new('Forbidden! Only customer can change this status')
