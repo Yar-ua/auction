@@ -26,7 +26,7 @@ RSpec.describe BidsController, type: :controller do
       it 'if lot with current id not exists or not finded - exception "Lot not found"' do
         expect {
           post :create, params: {lot_id: 123456, proposed_price: 10}
-          }.to raise_error
+          }.to raise_error('Lot not found')
       end
 
       describe 'is seller of lot' do

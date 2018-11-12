@@ -18,6 +18,12 @@ Rails.application.routes.draw do
       get '/mylots' => 'lots#mylots'
     end
     resources :bids, only: [:create]
+    resource :orders, only: [:create] do 
+      # post "create", to: "orders#create"
+      put :sent
+      put :delivered
+    end
+    
   end
   
 end

@@ -5,7 +5,8 @@
     FactoryBot.create(:lot, :in_process, user: user)
   end
   3.times do
-    FactoryBot.create(:lot, :closed, user: user)
+    lot = FactoryBot.create(:lot, :closed, user: user)
+    FactoryBot.create(:order, lot: lot)
   end
   3.times do
     FactoryBot.create(:lot, user: user)
